@@ -1,20 +1,34 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import axios from "axios"
 
 export default function RegisterPage(){
     
     const[name,setName]=useState('');
     const[email,setEmail]=useState('');
     const [password, setPassword] = useState('');
-    const handleLoginSubmit=(e)=>{
+    async function  registerUser(e){
         e.preventDefault();
+       
+        try {
+          await axios.post('http://localhost:8000/register', {
+            name,
+            email,
+            password,
+          });
+          alert('Registration successful. Now you can log in');
+          console.log(name,email,password)
+        } 
+        catch {
+          alert('Registration failed. Please try again later');
+        }
     }
     return(
         <div className="mt-4 grow flex items-center justify-around">
         <div className="mb-64">
           <h1 className="text-4xl text-center mb-4">Register</h1>
-          <form className="max-w-md mx-auto" onSubmit={handleLoginSubmit}>
+          <form className="max-w-md mx-auto" onSubmit={registerUser}>
           <input type="text"
                    placeholder="Your Name"
                    value={name}
