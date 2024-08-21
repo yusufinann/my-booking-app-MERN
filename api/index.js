@@ -3,8 +3,10 @@ import cors from "cors";
 import connectToMongoDB from "./db/connectToMongoDB.js";
 import dotenv from "dotenv";
 import authRoutes from './routes/auth.routes.js';
+import cookieParser from "cookie-parser";
+import apiRoutes from "./routes/api.routes.js";
 
-dotenv.config(); // To Read .env File
+dotenv.config(); // .env dosyasını okumak için
 
 const app = express();
 const port = process.env.PORT || 8000;
@@ -15,16 +17,16 @@ app.use(cors({
     origin: 'http://localhost:5173',
 }));
 
-app.use(express.json());
+app.use(express.json()); // JSON gövdesini ayrıştırmak için
+app.use(cookieParser()); // Çerezleri ayrıştırmak için
 
-// The Get Request for homePage
 app.get('/', (req, res) => {
   res.send('Merhaba, Express Sunucusu!');
 });
 
 app.use("/", authRoutes);
+app.use("/api", apiRoutes);
 
-// Sunucuyu başlatma
 app.listen(port, () => {
     connectToMongoDB();
     console.log(`Server is running on port ${port}`);
