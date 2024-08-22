@@ -1,11 +1,11 @@
 import express from "express";
-import { profile } from "../controllers/api.controller.js";
+import { profile ,uploadByLink} from "../controllers/api.controller.js";
 
 const router = express.Router();
 
 // Kullanıcı kaydı için bir POST isteği
 router.get("/profile", profile);
-//router.post("/logout");
+router.post("/upload-by-link", uploadByLink);
 
 
 export default router;

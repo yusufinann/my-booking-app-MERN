@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import PlacesPage from "./PlacesPage";
 import axios from "axios";
 
 export default function Account() {
@@ -51,22 +52,19 @@ export default function Account() {
         </Link>
       </nav>
 
-      <div className="max-w-md mx-auto">
-       
-
+      <div>  {/* classname="max-w-md mx-auto" */}
         {subpage === "profile" ? (
-             <div className="max-w-md mx-auto">
-           <p>Logged in as {user.name} ({user.email})</p>
-          <button className="primary" onClick={logout}>
-            Logout
-          </button>
+          <div>
+            <p>Logged in as {user.name} ({user.email})</p>
+            <button className="primary" onClick={logout}>
+              Logout
+            </button>
           </div>
         ) : (
-          <div>
-            {/* Add different content for other subpages here */}
-            {subpage === "bookings" && <p>Bookings Content</p>}
-            {subpage === "places" && <p>Places Content</p>}
-          </div>
+          <>
+            {subpage === "bookings" && <p>Booking Content</p>}
+            {subpage === "places" && <PlacesPage />}
+          </>
         )}
       </div>
     </>

@@ -5,11 +5,18 @@ import dotenv from "dotenv";
 import authRoutes from './routes/auth.routes.js';
 import cookieParser from "cookie-parser";
 import apiRoutes from "./routes/api.routes.js";
+import path from "path";
+import { fileURLToPath } from 'url';
 
 dotenv.config(); // .env dosyasını okumak için
 
 const app = express();
 const port = process.env.PORT || 8000;
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // CORS middleware'ini burada kullanın
 app.use(cors({
