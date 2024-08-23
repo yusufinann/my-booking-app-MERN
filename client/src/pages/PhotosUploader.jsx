@@ -18,24 +18,35 @@ export default function PhotosUploader({ addedPhotos, onChange }) {
       console.error("Failed to upload photo by link", error);
     }
   }
-
   async function uploadPhoto(ev) {
     const files = ev.target.files;
+    if (files.length === 0) return;
+  
     const data = new FormData();
     for (let i = 0; i < files.length; i++) {
       data.append('photos', files[i]);
     }
+    
+    // Log to check if files are correctly added to FormData
+    for (let pair of data.entries()) {
+      console.log(pair[0], pair[1]); // logs 'photos' and the file object
+    }
+  
     try {
-      const { data: filenames } = await axios.post('/upload', data, {
+      const response = await axios.post('/api/upload', data, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      // Add the response paths to the photos
+      
+      const { data: filenames } = response;
       onChange(prev => [...prev, ...filenames]);
+      console.log('Uploaded files:', filenames);
     } catch (error) {
       console.error("Failed to upload photos", error);
+      alert("Failed to upload photos. Please try again.");
     }
   }
-
+  
+  
   function removePhoto(ev, filename) {
     ev.preventDefault();
     onChange(addedPhotos.filter(photo => photo !== filename));

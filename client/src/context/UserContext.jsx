@@ -12,22 +12,24 @@ export function UserContextProvider({ children }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
+    // If user is not already stored, fetch from the server
     if (!user) {
       axios
         .get("/profile")
         .then(({ data }) => {
           setUser(data);
           localStorage.setItem("user", JSON.stringify(data));
-
-          setReady(true);
         })
         .catch(() => {
-          setReady(true); // Eğer bir hata oluşursa ready'yi true yapın
+          // Optional: Handle fetch error
+        })
+        .finally(() => {
+          setReady(true); // Always set ready to true after the fetch attempt
         });
     } else {
       setReady(true);
     }
-  }, [user]);
+  }, [user]); // Empty dependency array ensures this effect only runs once
 
   return (
     <UserContext.Provider value={{ user, setUser, ready }}>

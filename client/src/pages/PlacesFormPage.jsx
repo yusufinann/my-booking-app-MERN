@@ -1,9 +1,11 @@
-
 import Perks from "../components/Perks.jsx";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import axios from "axios";
 import {Navigate, useParams} from "react-router-dom";
 import PhotosUploader from "./PhotosUploader.jsx";
+
+import AccountNav from "../components/AccountNav.jsx";
+import { UserContext } from "../context/UserContext.jsx";
 
 export default function PlacesFormPage() {
   const {id} = useParams();
@@ -18,11 +20,13 @@ export default function PlacesFormPage() {
   const [maxGuests,setMaxGuests] = useState(1);
   const [price,setPrice] = useState(100);
   const [redirect,setRedirect] = useState(false);
+ const { user } = useContext(UserContext);
+
   useEffect(() => {
     if (!id) {
       return;
     }
-    axios.get('/places/'+id).then(response => {
+    axios.get('api/places/'+id).then(response => {
        const {data} = response;
        setTitle(data.title);
        setAddress(data.address);
@@ -36,6 +40,7 @@ export default function PlacesFormPage() {
        setPrice(data.price);
     });
   }, [id]);
+
   function inputHeader(text) {
     return (
       <h2 className="text-2xl mt-4">{text}</h2>
@@ -57,32 +62,88 @@ export default function PlacesFormPage() {
 
   async function savePlace(ev) {
     ev.preventDefault();
+    
+    // Ortak place verilerini tanımla
     const placeData = {
-      title, address, addedPhotos,
-      description, perks, extraInfo,
-      checkIn, checkOut, maxGuests, price,
+      title,
+      address,
+      addedPhotos,
+      description,
+      perks,
+      extraInfo,
+      checkIn,
+      checkOut,
+      maxGuests,
+      price,
     };
-    if (id) {
-      // update
-      await axios.put('/places', {
-        id, ...placeData
-      });
+  
+    try {
+      if (id) {
+        // Güncelleme işlemi
+        await axios.put(`http://localhost:8000/api/places/${id}`, placeData, { // Include id in URL
+          withCredentials: true
+        });
+        console.log(id)
+      } else {
+        // Yeni oluşturma işlemi
+        await axios.post('http://localhost:8000/api/places', placeData, {
+          withCredentials: true
+        });
+      }
+  
+      // Başarılı işlemin ardından yönlendirme
       setRedirect(true);
-    } else {
-      // new place
-      await axios.post('/places', placeData);
-      setRedirect(true);
+    } catch (error) {
+      console.error('Hata oluştu:', error);
+      // Hata yönetimi burada yapılabilir
     }
-
   }
+
+
+
+  // async function savePlace(ev) {
+  //   ev.preventDefault();
+    
+  //   // Ortak place verilerini tanımla
+  //   const placeData = {
+  //     title,
+  //     address,
+  //     addedPhotos,
+  //     description,
+  //     perks,
+  //     extraInfo,
+  //     checkIn,
+  //     checkOut,
+  //     maxGuests,
+  //     price,
+  //   };
+  
+  //   // HTTP isteği türü ve URL'yi tanımla
+  //   const method = id ? 'put' : 'post'; // Güncelleme mi yoksa oluşturma mı yapacağımızı belirler.
+  //   const url = 'api/places'; // Her iki durumda da aynı URL kullanılır
+  
+  //   try {
+  //     await axios({
+  //       method,
+  //       url,
+  //       data: id ? { id, ...placeData } : placeData, // Eğer id varsa veriyi günceller
+  //       withCredentials: true,
+  //     });
+  
+  //     setRedirect(true); // İşlem başarılı olursa yönlendirme yapılır
+  //   } catch (error) {
+  //     console.error('Hata oluştu:', error);
+  //     // Hata yönetimi burada yapılabilir
+  //   }
+  // }
 
   if (redirect) {
     return <Navigate to={'/account/places'} />
   }
-
+ 
   return (
     <div>
-      {/* <AccountNav /> */}
+      <AccountNav/>
       <form onSubmit={savePlace}>
         {preInput('Title', 'Title for your place. should be short and catchy as in advertisement')}
         <input type="text" value={title} onChange={ev => setTitle(ev.target.value)} placeholder="title, for example: My lovely apt"/>
