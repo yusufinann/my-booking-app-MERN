@@ -48,6 +48,7 @@ export const login = async (req, res) => {
      {
       return res.status(400).json({ error: "Invalid username or password" });
      }
+     console.log("Logged in user ID:", user._id);
      await generateTokenAndSetCookie(user._id,res);
   
      res.status(200).json({
@@ -64,15 +65,20 @@ export const login = async (req, res) => {
 
   export const logout = (req, res) => {
     try {
-        // Clear the cookie by setting its maxAge to 0
-        res.cookie("jwt", "", { maxAge: 0 });
+      // Log the cookie value before clearing it
+      console.log("Before clearing, jwt cookie value:", req.cookies.jwt);
   
-        // Send a JSON response indicating success
-        res.status(200).json({ message: "Logged out successfully" });
+      // Clear the cookie by setting its maxAge to 0
+      res.cookie("jwt", "", { maxAge: 0 });
+  
+      // Log the cookie value after clearing it
+      console.log("After clearing, jwt cookie value:", req.cookies.jwt);
+  
+      // Send a JSON response indicating success
+      res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
-        console.error("Error in logout controller", error.message);
-        res.status(500).json({ error: "Internal server error" });
+      console.error("Error in logout controller", error.message);
+      res.status(500).json({ error: "Internal server error" });
     }
   };
-
   

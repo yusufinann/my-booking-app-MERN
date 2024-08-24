@@ -124,22 +124,23 @@ export const upload = (req, res) => {
 };
 
 export const places = async (req, res) => {
+  
   try {
-    const { jwt: token } = req.cookies; // Çerez adı 'jwt' olarak güncelledim
-
+    const { jwt: token } = req.cookies;
+    console.log("Received Token:", token);
+  
     if (!token) {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized: No token provided" });
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
     }
 
-    // Token'ı doğrula
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userData) => {
       if (err) {
         return res.status(401).json({ message: "Unauthorized: Invalid token" });
       }
 
-      // İstek gövdesinden verileri al
+      console.log("create places decoded userData:", userData); // Log the decoded user data
+
+      // Extract data from the request body
       const {
         title,
         address,
@@ -153,9 +154,14 @@ export const places = async (req, res) => {
         maxGuests,
       } = req.body;
 
-      // Yeni bir place dökümanı oluştur
+      // Ensure userId is present in userData
+      if (!userData.userId) {
+        return res.status(400).json({ message: "Invalid user data" });
+      }
+
+      // Create a new place document
       const placeDoc = await Place.create({
-        owner: userData.userId, // Kullanıcı ID'sini doğrula
+        owner: userData.userId, // Use the userId from the decoded token 
         title,
         address,
         photos: addedPhotos,
@@ -168,7 +174,9 @@ export const places = async (req, res) => {
         maxGuests,
       });
 
-      // Oluşturulan place dökümanı ile yanıt ver
+      // Log the owner ID
+      console.log("in create places  Owner ID:", userData.userId);
+
       res.status(201).json(placeDoc);
     });
   } catch (error) {
@@ -177,8 +185,9 @@ export const places = async (req, res) => {
   }
 };
 
+
 export const getPlaces = async (req, res) => {
-  console.log("Incoming request for /api/places");
+ // console.log("Incoming request for /api/user-places");
   try {
     const { jwt: token } = req.cookies;
     if (!token) {
@@ -190,12 +199,12 @@ export const getPlaces = async (req, res) => {
 
     const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decodedToken.userId;
-    console.log(`Decoded userId: ${userId}`);
+ //   console.log(`in getPlaces Decoded userId: ${userId}`);
 
-    console.log(`Fetching places for user ID: ${userId}`);
+ //   console.log(`in getPlaces Fetching places for user ID: ${userId}`);
 
     const places = await Place.find({ owner: userId });
-    console.log(`Found ${places.length} places for user ID: ${userId}`);
+ //   console.log(`in getPlaces Found ${places.length} places for user ID: ${userId}`);
 
     res.json({
       owner: userId,

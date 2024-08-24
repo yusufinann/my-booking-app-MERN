@@ -21,14 +21,20 @@ export default function Account() {
 
   async function logout() {
     try {
-      await axios.post("/logout");
+      // Çıkış yapmak için POST isteği gönder
+      await axios.post("/logout", {}, { withCredentials: true });
+      
+      // Kullanıcıyı localStorage'dan temizle
       localStorage.removeItem("user");
+      
+      // Kullanıcıyı oturum açma sayfasına yönlendir
       setUser(null);
       navigate("/login");
     } catch (error) {
       console.error("Logout error:", error);
     }
   }
+  
 console.log(user._id)
   return (
     <>

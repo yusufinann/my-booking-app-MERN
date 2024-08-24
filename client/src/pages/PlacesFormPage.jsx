@@ -1,11 +1,11 @@
 import Perks from "../components/Perks.jsx";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import axios from "axios";
 import {Navigate, useParams} from "react-router-dom";
 import PhotosUploader from "./PhotosUploader.jsx";
 
 import AccountNav from "../components/AccountNav.jsx";
-import { UserContext } from "../context/UserContext.jsx";
+//import { UserContext } from "../context/UserContext.jsx";
 
 export default function PlacesFormPage() {
   const {id} = useParams();
@@ -20,7 +20,7 @@ export default function PlacesFormPage() {
   const [maxGuests,setMaxGuests] = useState(1);
   const [price,setPrice] = useState(100);
   const [redirect,setRedirect] = useState(false);
- const { user } = useContext(UserContext);
+ //const { user } = useContext(UserContext);
 
   useEffect(() => {
     if (!id) {
@@ -62,8 +62,8 @@ export default function PlacesFormPage() {
 
   async function savePlace(ev) {
     ev.preventDefault();
-    
-    // Ortak place verilerini tanımla
+  
+    // Define common place data
     const placeData = {
       title,
       address,
@@ -79,63 +79,29 @@ export default function PlacesFormPage() {
   
     try {
       if (id) {
-        // Güncelleme işlemi
-        await axios.put(`http://localhost:8000/api/places/${id}`, placeData, { // Include id in URL
+        // Update place
+        await axios.put(`http://localhost:8000/api/places/${id}`, placeData, {
           withCredentials: true
         });
-        console.log(id)
       } else {
-        // Yeni oluşturma işlemi
+        // Create new place
         await axios.post('http://localhost:8000/api/places', placeData, {
           withCredentials: true
         });
       }
   
-      // Başarılı işlemin ardından yönlendirme
+    
+  
+      // Redirect after a successful operation
       setRedirect(true);
     } catch (error) {
-      console.error('Hata oluştu:', error);
-      // Hata yönetimi burada yapılabilir
+      console.error('An error occurred:', error);
+      // Error handling can be done here
     }
   }
+  
 
 
-
-  // async function savePlace(ev) {
-  //   ev.preventDefault();
-    
-  //   // Ortak place verilerini tanımla
-  //   const placeData = {
-  //     title,
-  //     address,
-  //     addedPhotos,
-  //     description,
-  //     perks,
-  //     extraInfo,
-  //     checkIn,
-  //     checkOut,
-  //     maxGuests,
-  //     price,
-  //   };
-  
-  //   // HTTP isteği türü ve URL'yi tanımla
-  //   const method = id ? 'put' : 'post'; // Güncelleme mi yoksa oluşturma mı yapacağımızı belirler.
-  //   const url = 'api/places'; // Her iki durumda da aynı URL kullanılır
-  
-  //   try {
-  //     await axios({
-  //       method,
-  //       url,
-  //       data: id ? { id, ...placeData } : placeData, // Eğer id varsa veriyi günceller
-  //       withCredentials: true,
-  //     });
-  
-  //     setRedirect(true); // İşlem başarılı olursa yönlendirme yapılır
-  //   } catch (error) {
-  //     console.error('Hata oluştu:', error);
-  //     // Hata yönetimi burada yapılabilir
-  //   }
-  // }
 
   if (redirect) {
     return <Navigate to={'/account/places'} />

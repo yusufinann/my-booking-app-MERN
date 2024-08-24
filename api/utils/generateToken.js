@@ -1,18 +1,18 @@
 import jwt from "jsonwebtoken";
-
 const generateTokenAndSetCookie = (userId, res) => {
 	const token = jwt.sign({ userId }, process.env.JWT_SECRET, {
-		expiresIn: "15d",
+	  expiresIn: "15d",
 	});
-
+	console.log("Generated Token:", token);
+  
 	res.cookie("jwt", token, {
-		maxAge: 15 * 24 * 60 * 60 * 1000, // MS
-		httpOnly: true, // prevent XSS attacks cross-site scripting attacks
-		sameSite: "None", // CSRF attacks cross-site request forgery attacks
-		secure: process.env.NODE_ENV !== "development",
+	  maxAge: 15 * 24 * 60 * 60 * 1000, // 15 gün
+	  httpOnly: true, // JavaScript ile erişilemez
+	  sameSite: "None", // CSRF koruması için
+	  secure: process.env.NODE_ENV === "development", // Üretim ortamında HTTPS üzerinden gönderilir
 	});
-
-
-};
-
-export default generateTokenAndSetCookie;
+  };
+  
+  
+  export default generateTokenAndSetCookie;
+  

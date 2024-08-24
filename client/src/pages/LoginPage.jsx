@@ -15,9 +15,11 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     try {
-      const { data: userInfo } = await axios.post("/login", { email, password });
+      const { data: userInfo } = await axios.post("/login", { email, password }, { withCredentials: true });
       setUser(userInfo);
       localStorage.setItem("user", JSON.stringify(userInfo));
+      console.log(document.cookie);
+
       alert("Login successful");
       setRedirect(true);
     } catch (error) {

@@ -1,24 +1,21 @@
 import { Link } from "react-router-dom";
 import AccountNav from "../components/AccountNav";
-import { useEffect, useState } from "react";
+import {useEffect, useState } from "react";
 import axios from "axios";
 
 export default function PlacesPage() {
   const [places, setPlaces] = useState([]);
-
   useEffect(() => {
     // Kullanıcının yerlerini almak için API çağrısı
-    axios.get("api/places", { withCredentials: true })
+    axios.get("api/user-places", { withCredentials: true })
       .then(({ data }) => {
         console.log("Fetched places:", data.places); // Verileri konsola yazdır
         setPlaces(data.places);  // Backend'den gelen "places" verisini set ediyoruz
-        console.log(places)
-      })
+     })
       .catch((err) => {
         console.error("Failed to fetch places:", err);
       });
   }, []);
-  
 
   return (
     <div>
@@ -42,7 +39,7 @@ export default function PlacesPage() {
                 <div className="mt-2">
                   {place.photos && place.photos.length > 0 ? (
                     <img
-                      src={place.photos[0]}
+                      src={"http://localhost:8000/uploads/"+place.photos[0]}
                       alt={place.title}
                       className="w-full h-48 object-cover rounded-lg"
                     />

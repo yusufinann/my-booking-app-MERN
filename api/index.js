@@ -18,8 +18,8 @@ const __dirname = path.dirname(__filename);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// CORS middleware'ini burada kullanın
-app.use(cors({
+// CORS middleware'ini burada kullanın                            
+app.use(cors({                                                                                                                                                                                                                                                                                                                                                                         
     credentials: true,
     origin: 'http://localhost:5173',
 }));

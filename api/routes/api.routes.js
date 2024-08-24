@@ -7,7 +7,7 @@ router.get("/profile", profile);
 router.post("/upload-by-link", uploadByLink);
 router.post("/upload", upload);
 router.post("/places", places);
-router.get("/places", getPlaces);
+router.get("/user-places", getPlaces);
 router.get("/places/:id", getPlacesById);
 router.put("/places/:id", updatePlacesById);
 
