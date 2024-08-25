@@ -1,19 +1,23 @@
 import { Link } from "react-router-dom";
 import AccountNav from "../components/AccountNav";
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function PlacesPage() {
   const [places, setPlaces] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);  // Loading state
+
   useEffect(() => {
     // Kullanıcının yerlerini almak için API çağrısı
     axios.get("api/user-places", { withCredentials: true })
       .then(({ data }) => {
         console.log("Fetched places:", data.places); // Verileri konsola yazdır
         setPlaces(data.places);  // Backend'den gelen "places" verisini set ediyoruz
-     })
+        setIsLoading(false);  // Veriler yüklendikten sonra loading'i false yapıyoruz
+      })
       .catch((err) => {
         console.error("Failed to fetch places:", err);
+        setIsLoading(false);  // Hata olsa da loading'i kapatıyoruz
       });
   }, []);
 
@@ -30,7 +34,11 @@ export default function PlacesPage() {
       </div>
       <div className="mt-4">
         <h1 className="text-xl font-semibold">List of all added places</h1>
-        {places.length > 0 ? (
+        {isLoading ? (  // Eğer loading aktifse, spinner gösterilir
+          <div className="flex justify-center items-center mt-4">
+            <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-primary"></div>
+          </div>
+        ) : places.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {places.map((place) => (
               <div key={place._id} className="border p-4 rounded-lg shadow-lg">
@@ -39,7 +47,7 @@ export default function PlacesPage() {
                 <div className="mt-2">
                   {place.photos && place.photos.length > 0 ? (
                     <img
-                      src={"http://localhost:8000/uploads/"+place.photos[0]}
+                      src={"http://localhost:8000/uploads/" + place.photos[0]}
                       alt={place.title}
                       className="w-full h-48 object-cover rounded-lg"
                     />

@@ -7,6 +7,7 @@ export default function Header(){
     return(
         <div>
         <header className="flex justify-between">
+        <Link to={"/"}>
           <a href="" className="flex items-center gap-1">
             <svg
               width="30"
@@ -20,6 +21,7 @@ export default function Header(){
             </svg>
             <span className="font-bold text-xl">airbnb</span>
           </a>
+          </Link>
           <div className="flex border border-gray-300 rounded-full py-2 px-4 gap-2 shadow-md shadow-gray-500 ">
             <div>Anywhere</div>
             <div className="border-l border-gray-300"></div>

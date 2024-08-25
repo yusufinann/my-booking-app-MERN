@@ -55,11 +55,15 @@ export default function LoginPage() {
             onChange={(ev) => setPassword(ev.target.value)}
           />
           <div>
-            <button type="submit" className="primary">
+            <button
+              type="submit"
+              className="primary flex justify-center items-center"
+              disabled={loading}
+            >
               {loading ? (
-                <span className="loading loading-spinner"></span>
+                <div className="w-6 h-6 border-4 border-blue-500 border-t-transparent border-solid rounded-full animate-spin"></div>
               ) : (
-                <span>Login</span>
+                "Login"
               )}
             </button>
           </div>

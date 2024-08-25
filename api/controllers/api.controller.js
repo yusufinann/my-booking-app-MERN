@@ -289,3 +289,13 @@ export const updatePlacesById = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+export const getAllPlaces = async (req, res) => {
+  try {
+    const allPlaces = await Place.find(); // Fetch all places
+    res.status(200).json(allPlaces);
+  } catch (error) {
+    console.error("Error fetching all places:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
