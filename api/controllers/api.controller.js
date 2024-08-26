@@ -1,5 +1,6 @@
 import User from "../models/user.model.js";
 import Place from "../models/place.model.js";
+import Booking from "../models/booking.model.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto"; // Rastgele dosya adları oluşturmak için
 import multer from "multer";
@@ -296,6 +297,56 @@ export const getAllPlaces = async (req, res) => {
     res.status(200).json(allPlaces);
   } catch (error) {
     console.error("Error fetching all places:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+export const bookings = async (req, res) => {
+  try {
+    const { jwt: token } = req.cookies;
+
+    // Check if a token is provided
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    // Verify the token and extract the user ID
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId;
+
+    // Extract booking details from the request body
+    const {
+      place,
+      checkIn,
+      checkOut,
+      numberOfGuests,
+      name,
+      phone,
+      price,
+    } = req.body;
+
+    // Validate required fields
+    if (!place || !checkIn || !checkOut || !numberOfGuests || !name || !phone || !price) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    // Create the booking
+    const newBooking = await Booking.create({
+      place,
+      checkIn,
+      checkOut,
+      numberOfGuests,
+      name,
+      phone,
+      price,
+      user: userId, // Corrected user ID reference
+    });
+
+    // Return the created booking
+    res.status(201).json(newBooking);
+  } catch (error) {
+    console.error("Error creating booking:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
