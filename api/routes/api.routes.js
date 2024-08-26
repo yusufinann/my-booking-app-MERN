@@ -1,5 +1,5 @@
 import express from "express";
-import {getPlaces, places, profile ,upload,uploadByLink,getPlacesById,updatePlacesById, getAllPlaces,bookings} from "../controllers/api.controller.js";
+import {getPlaces, places, profile ,upload,uploadByLink,getPlacesById,updatePlacesById, getAllPlaces,bookings,getBookingsForUser} from "../controllers/api.controller.js";
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ router.get("/user-places", getPlaces);
 router.get("/places/:id", getPlacesById);
 router.put("/places/:id", updatePlacesById);
 router.post("/bookings", bookings);
-
+router.get("/bookings", getBookingsForUser);
 
 
 export default router;

@@ -350,3 +350,26 @@ export const bookings = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+export const getBookingsForUser = async (req, res) => {
+  try {
+    const { jwt: token } = req.cookies;
+
+    if (!token) {
+      return res.status(401).json({ message: "Unauthorized: No token provided" });
+    }
+
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decodedToken.userId;
+
+    // Veritabanından kullanıcının rezervasyonlarını çekiyoruz
+    const bookings = await Booking.find({ user: userId }).populate('place');
+
+    // Rezervasyonları JSON formatında yanıt olarak döndürüyoruz
+    res.json(bookings);
+    
+  } catch (error) {
+    console.error('Error fetching bookings for user:', error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
