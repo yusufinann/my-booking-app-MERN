@@ -6,6 +6,7 @@ import PlaceGallery from "../components/PlaceGallery";
 import AddressLink from "../components/AddressLink";
 import PhotoModal from "../components/PhotoModal";
 import AllPhotosModal from "../components/AllPhotosModal";
+import PerkList from "../components/PerkList";
 
 export default function PlacePage() {
   const { id } = useParams();
@@ -62,6 +63,9 @@ export default function PlacePage() {
           Check-out : {place.checkOut}
           <br />
           Max number of guests: {place.maxGuests}
+          <br />
+          <h2 className="text-2xl font-semibold mt-4 mb-2">Perks</h2>
+          <PerkList perks={place.perks} />
         </div>
         <div>
           <BookingWidget place={place} />

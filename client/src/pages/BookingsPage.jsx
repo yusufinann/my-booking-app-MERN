@@ -1,5 +1,4 @@
-import AccountNav from "../components/AccountNav";
-import { useEffect, useState } from "react";
+  import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import PlaceImg from "./PlaceImg";
@@ -23,8 +22,7 @@ export default function BookingsPage() {
   }, []);
 
   return (
-    <div>
-      <AccountNav />
+    <div className="mt-4">
       <div>
         {isLoading ? ( // Eğer loading aktifse, spinner gösterilir
           <div className="flex justify-center items-center mt-4">
@@ -37,7 +35,7 @@ export default function BookingsPage() {
               to={`/account/bookings/${booking._id}`}
               className="flex gap-4 bg-gray-200 rounded-2xl overflow-hidden"
             >
-              <div className="w-48">
+              <div className="w-48 mt-4">
                 <PlaceImg place={booking.place} />
               </div>
               <div className="py-3 pr-3 grow">

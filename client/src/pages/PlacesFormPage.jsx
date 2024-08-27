@@ -4,9 +4,6 @@ import axios from "axios";
 import {Navigate, useParams} from "react-router-dom";
 import PhotosUploader from "./PhotosUploader.jsx";
 
-import AccountNav from "../components/AccountNav.jsx";
-//import { UserContext } from "../context/UserContext.jsx";
-
 export default function PlacesFormPage() {
   const {id} = useParams();
   const [title,setTitle] = useState('');
@@ -108,8 +105,7 @@ export default function PlacesFormPage() {
   }
  
   return (
-    <div>
-      <AccountNav/>
+    <div className="mt-4">
       <form onSubmit={savePlace}>
         {preInput('Title', 'Title for your place. should be short and catchy as in advertisement')}
         <input type="text" value={title} onChange={ev => setTitle(ev.target.value)} placeholder="title, for example: My lovely apt"/>
